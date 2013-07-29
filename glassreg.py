@@ -1,4 +1,4 @@
-
+# Intrinsic parameters for glass display
 f = 2968.5
 cx = 640/2
 cy = 360/2
@@ -7,20 +7,34 @@ cy = 360/2
 KK = [[f, 0, cx],
       [0, f, cy],
       [0, 0,  1]]
+"""
+   [[2968.5, 0, 320], 
+    [0, 2968.5, 180], 
+    [0, 0, 1]]
+"""
 
 # direction vector = KK_inv * image coordinate
 invKK = np.linalg.inv(KK)
+"""
+   [[  3.369e-04,   0.000e+00,  -1.078e-01],
+    [  0.000e+00,   3.369e-04,  -6.064e-02],
+    [  0.000e+00,   0.000e+00,   1.000e+00]]
+"""
 
+
+# Prepare an image homography from a rotation matrix
 def homgraphy_from_rotation(rot):
-    # multiply out matrix 3 times
     return np.dot(KK, np.dot(rot, invKK))
 
+
+# Example for applying the homography to a single point
 def apply_rotation(rot, p):
     # p is a homogeneous image point ~ (x,y,1)
     direction_vector = np.dot(invKK, p)
     rotated_direction = np.dot(rot, direction_vector)
     p_prime = np.apply(KK, rotated_direction)
     return p_prime
+
 
 # For improving the rotation matrix
 orientation_fwd = np.array([281.16583,-87.140755,2.3037903])/360
