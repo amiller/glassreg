@@ -1,1 +1,9 @@
-glass
+glass registration examples:
+      ipython
+      [1] run -i glassreg.py
+      [2] warp(); # glass camera example
+      [3] once(); # glass viewport example
+
+webgl example:
+      python -m SimpleHTTPServer 8080
+      (open http://localhost:8080/webgl_warp.html in browser)
