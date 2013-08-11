@@ -1,3 +1,5 @@
+import numpy as np
+
 # Intrinsic parameters for glass display
 f = 2968.5
 cx = 640/2
@@ -23,7 +25,7 @@ invKK = np.linalg.inv(KK)
 
 
 # Prepare an image homography from a rotation matrix
-def homgraphy_from_rotation(rot):
+def homography_from_rotation(rot):
     return np.dot(KK, np.dot(rot, invKK))
 
 
