@@ -54,6 +54,26 @@ void main() {
     var gl;
     var program;
 
+    var log = function(msg) {
+        if (window.console && window.console.log) {
+            window.console.log(msg);
+        }
+    };
+    var error = function(msg) {
+        if (window.console) {
+            if (window.console.error) {
+                window.console.error(msg);
+            }
+            else if (window.console.log) {
+                window.console.log(msg);
+            }
+        }
+    };
+    var loggingOff = function() {
+        log = function() {};
+        error = function() {};
+    };
+
 
     var loadShader = function(gl, shaderSource, shaderType, opt_errorCallback) {
         var errFn = opt_errorCallback || error;
@@ -135,6 +155,44 @@ void main() {
             opt_errorCallback);
     };
 
+    function setup_gl(gl) {
+        d = WS.glConstants();
+        function make(name) { return function(a1,a2,a3,a4,a5,a6,a7,a8){ 
+            WS.gl(name, a1,a2,a3,a4,a5,a6,a7,a8);
+        }; };
+        gl.COMPILE_STATUS = d["COMPILE_STATUS"]
+        gl.LINK_STATUS = d["LINK_STATUS"]
+        gl.STATIC_DRAW = d["STATIC_DRAW"];
+        gl.TRIANGLES = d["TRIANGLES"];
+        gl.VERTEX_SHADER = d["VERTEX_SHADER"];
+        gl.FRAGMENT_SHADER = d["FRAGMENT_SHADER"];
+        gl.ARRAY_BUFFER = d["ARRAY_BUFFER"];
+        gl.FLOAT = d["FLOAT"];
+
+        gl.createShader = make("createShader");
+        gl.compileShader = make("compileShader");
+        gl.getShaderParameter = make("getShaderParameter");
+        gl.getShaderInfoLog = make("getShaderInfoLog");
+        gl.deleteShader = make("deleteShader");
+        gl.createProgram = make("createProgram");
+        gl.attachShader = make("attachShader");
+        gl.bindAttribLocation = make("bindAttribLocation");
+        gl.linkProgram = make("linkProgram");
+        gl.getProgramParameter = make("getProgramParameter");
+        gl.getProgramInfoLog = make("getProgramInfoLog");
+        gl.deleteProgram = make("deleteProgram");
+        gl.useProgram = make("useProgram");
+        gl.createBuffer = make("createBuffer");
+        gl.bindBuffer = make("bindBuffer");
+        gl.getAttributeLocation = make("getAttributeLocation");
+        gl.enableAttribArray = make("enableAttribArray");
+        gl.vertexAttribPointer = make("vertexAttribPointer");
+        gl.bufferData = make("bufferData");
+        gl.getUniformLocation = make("getUniformLocation");
+        gl.uniformMatrix3fv = make("uniformMatrix3fv");
+        gl.drawArrays = make("drawArrays");
+    }
+
 
     function setup() {
         // Get A WebGL context
@@ -142,8 +200,8 @@ void main() {
         gl = canvas.getContext("experimental-webgl");
 
         // setup a GLSL program
-        var vertexShader = createShaderFromScriptElement(gl, "2d-vertex-shader");
-        var fragmentShader = createShaderFromScriptElement(gl, "2d-fragment-shader");
+        var vertexShader = createShaderFromScript(gl, "2d-vertex-shader");
+        var fragmentShader = createShaderFromScript(gl, "2d-fragment-shader");
         program = createProgram(gl, [vertexShader, fragmentShader]);
         gl.useProgram(program);
 
